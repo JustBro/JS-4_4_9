@@ -1,7 +1,20 @@
 const searchField = document.querySelector('.search__field')
 const searchHints = document.querySelector('.search__hints')
 const cards = document.querySelector('.cards')
-let repos = ''
+let repos
+
+const showMessage = (type, error) => {
+const errElem = document.createElement('li')
+errElem.classList.add('search__err')
+
+if (type === 'noteFound') {
+    errElem.textContent = `По данному запросу ничего не найдено.`
+} else {
+    errElem.textContent = `Не удалось получить список репозиториев. ${error.message}`
+}
+
+searchHints.appendChild(errElem)
+}
 
 const createHints = (repos) => {
     let fragment = document.createDocumentFragment()
@@ -16,15 +29,30 @@ const createHints = (repos) => {
 }
 
 const searchRepos = async () => {
-    const request = searchField.value.trim()
-    if (!request) {
-        searchHints.innerHTML = ''
-        return
-    }
 
-    const response = await fetch(`https://api.github.com/search/repositories?q=${request}`)
-    repos = (await response.json()).items.slice(0, 5)
-    createHints(repos)
+    searchHints.innerHTML = ''
+
+    const request = searchField.value.trim()
+
+    if (!request || !request.trim()) return
+
+    try {
+        const response = await fetch(`https://api.github.com/search/repositories?q=${request.trim()}`)
+        if (!response.ok) {
+            throw new Error(`Ошибка: ${response.status}`)
+        }
+    
+        repos = (await response.json()).items
+        if (!repos.length) {
+            showMessage('noteFound')
+            return
+        }
+
+        createHints(repos.slice(0, 5))
+
+    } catch (error) {
+        showMessage('', error)
+    }
 }
 
 const addCard = evt => {
@@ -78,25 +106,6 @@ const debounce = (fn, time) => {
     }
 };
 
-searchField.addEventListener('input', debounce(searchRepos, 500)) 
+searchField.addEventListener('input', debounce(searchRepos, 1000)) 
 searchHints.addEventListener('click', addCard)
 cards.addEventListener('click', deleteCard)
-
-
-
-
-
-
-
-
-/* При воде символа выводить подсказки с задержкой
-
-При клике на вариант чистить строку поиска,
-убирать подсказки, добавлять выбранный вариант в карточки
-
-При нажатии на пробел, запрос не должен выполняться
-
-Функцию поиска сделать отдельно, при подписке на событие
-отправлять референс на функцию
-
-При удалении карточки снимать слушатель с нее */

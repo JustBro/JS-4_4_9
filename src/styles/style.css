@@ -31,6 +31,14 @@
     background-color: #fff;
 }
 
+.search__err {
+    background-color: #cc5555;
+    list-style: none;
+    border: 2px solid black;
+    padding: 20px;
+    border-radius: 5px;
+}
+
 .cards {
     padding: 0;
     padding-top: 155px;
