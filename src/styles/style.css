@@ -65,7 +65,7 @@
     height: 10px;
     border: none;
     background-color: #d0d0d0;
-    background-image: url(/src/img/close-pic.png);
+    background-image: url(/src/img/close.png);
     background-repeat: no-repeat;
     background-size: contain;
 }
