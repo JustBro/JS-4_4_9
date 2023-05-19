@@ -1,1 +1,6 @@
-## [Ссылка на опубликованную версию](https://justbro.github.io/JS-4_3_7/)
+## Регистрация:
+![Registration](img/Registration.png)
+## Авторизация:
+![Authentication](img/Authentication.png)
+## Получение данных текущего пользователя:
+![CurrentUser](img/CurrentUser.png)
